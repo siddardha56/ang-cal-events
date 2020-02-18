@@ -1,0 +1,260 @@
+<div class="field">
+  <label>Upload JSON file:</label>
+  <input type="file" name="resume" (change)="onFileChanged($event)" observeFiles />
+</div>
+<br />
+<div class="user-details" *ngIf="userData.name !== ''">
+  <p><b>Technician Name:</b> {{userData?.name}}</p>
+  <div><b>Total Number of ‘D’:</b> {{userData?.status.D}}</div>
+  <div><b>Total Number of ‘B’:</b> {{userData?.status.B}}</div>
+  <div><b>Total Number of ‘L’:</b> {{userData?.status.L}}</div>
+</div>
+<br />
+<div class="row text-center">
+  <div class="col-md-4">
+    <div class="btn-group">
+      <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
+        (viewDateChange)="closeOpenMonthViewDay()">
+        Previous
+      </div>
+      <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">
+        Today
+      </div>
+      <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate"
+        (viewDateChange)="closeOpenMonthViewDay()">
+        Next
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+  </div>
+  <div class="col-md-4">
+    <div class="btn-group">
+      <div class="btn btn-primary" (click)="setView(CalendarView.Month)" [class.active]="view === CalendarView.Month">
+        Month
+      </div>
+      <div class="btn btn-primary" (click)="setView(CalendarView.Week)" [class.active]="view === CalendarView.Week">
+        Week
+      </div>
+      <!-- <div
+        class="btn btn-primary"
+        (click)="setView(CalendarView.Day)"
+        [class.active]="view === CalendarView.Day"
+      >
+        Day
+      </div> -->
+    </div>
+  </div>
+</div>
+<br />
+<div class="calendar-wrapper" [ngSwitch]="view">
+  <mwl-calendar-month-view
+    *ngSwitchCase="CalendarView.Month"
+    [viewDate]="viewDate"
+    [events]="events"
+    [refresh]="refresh"
+    (dayClicked)="dayClicked($event.day)"
+    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventTimesChanged)="eventTimesChanged($event)"
+    (beforeViewRender)="beforeMonthViewRender($event)"
+  >
+  </mwl-calendar-month-view>
+  <mwl-calendar-week-view
+    *ngSwitchCase="CalendarView.Week"
+    [viewDate]="viewDate"
+    [events]="events"
+    [refresh]="refresh"
+    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventTimesChanged)="eventTimesChanged($event)"
+    (beforeViewRender)="beforeWeekViewRender($event)"
+  >
+  </mwl-calendar-week-view>
+  <!-- <mwl-calendar-day-view
+    *ngSwitchCase="CalendarView.Day"
+    [viewDate]="viewDate"
+    [events]="events"
+    [refresh]="refresh"
+    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventTimesChanged)="eventTimesChanged($event)"
+  >
+  </mwl-calendar-day-view> -->
+</div>
+
+<div class="status-v">
+  <span class="jss295" style="margin-right: 10px;"> Value:</span>
+  <span>High</span>
+  <span class="value five">5</span>
+  <span class="value four">4</span>
+  <span class="value three">3</span>
+  <span class="value two">2</span>
+  <span class="value one">1</span>
+  <span>Low</span>
+</div>
+<!-- Everything you see below is just for the demo, you don't need to include it in your app -->
+
+<!-- <br /><br /><br />
+
+<h3>
+  Edit events
+  <button class="btn btn-primary pull-right" (click)="addEvent()">
+    Add new
+  </button>
+  <div class="clearfix"></div>
+</h3> -->
+
+<!-- <div class="table-responsive">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Primary color</th>
+        <th>Secondary color</th>
+        <th>Starts at</th>
+        <th>Ends at</th>
+        <th>Remove</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let event of events">
+        <td>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="event.title"
+            (keyup)="refresh.next()"
+          />
+        </td>
+        <td>
+          <input
+            type="color"
+            [(ngModel)]="event.color.primary"
+            (change)="refresh.next()"
+          />
+        </td>
+        <td>
+          <input
+            type="color"
+            [(ngModel)]="event.color.secondary"
+            (change)="refresh.next()"
+          />
+        </td>
+        <td>
+          <input
+            class="form-control"
+            type="text"
+            mwlFlatpickr
+            [(ngModel)]="event.start"
+            (ngModelChange)="refresh.next()"
+            dateFormat="Y-m-dTH:i"
+            altFormat="F j, Y H:i"
+            placeholder="Not set"
+          />
+        </td>
+        <td>
+          <input
+            class="form-control"
+            type="text"
+            mwlFlatpickr
+            [(ngModel)]="event.end"
+            (ngModelChange)="refresh.next()"
+            dateFormat="Y-m-dTH:i"
+            altFormat="F j, Y H:i"
+            placeholder="Not set"
+          />
+        </td>
+        <td>
+          <button class="btn btn-danger" (click)="deleteEvent(event)">
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div> -->
+
+<ng-template #modalContent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">Work Order Details</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div>
+      Event:
+      <div>
+        <div>
+          <span>
+            <b>
+              Store Id:
+            </b>
+          </span>
+          <span>{{modalData?.event?.store_id}}</span>
+        </div>
+        <div>
+          <span>
+            <b>
+              Tracking Id:
+            </b>
+          </span>
+          <span>{{modalData?.event?.id}}</span>
+        </div>
+        <div>
+          <span>
+            <b>
+              Priority:
+            </b>
+          </span>
+          <span>{{modalData?.event?.priority}}</span>
+        </div>
+        <div>
+          <span>
+            <b>
+              Skills:
+            </b>
+          </span>
+          <span>{{modalData?.event?.skills}}</span>
+        </div>
+        <div>
+          <span>
+            <b>
+              Technician Name:
+            </b>
+          </span>
+          <span>{{modalData?.event?.technician_name}}</span>
+        </div>
+        <div>
+          <span>
+            <b>
+              Optimization Status:
+            </b>
+          </span>
+          <span>{{modalData?.event?.optimization_status}}</span>
+        </div>
+        <div>
+          <span>
+            <b>
+              Rank:
+            </b>
+          </span>
+          <span>{{modalData?.event?.rank}}</span>
+        </div>
+        <div>
+          <span>
+            <b>
+              Percentile Rank:
+            </b>
+          </span>
+          <span>{{modalData?.event?.percentile_rank}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">
+      OK
+    </button>
+  </div>
+</ng-template>

@@ -1,0 +1,44 @@
+/* You can add global styles to this file, and also import other style files */
+
+.cal-event-title .ng-star-inserted {
+  display: inline-block;
+}
+
+
+.cal-event-action {
+  display: flex;
+}
+
+.cal-hour-segment {
+  background-color: #fff !important;
+}
+.cal-time-label-column {
+  background-color: #fff !important;
+}
+
+.cal-time-events {
+  overflow: auto;
+  height: 600px;
+}
+
+.fa-fw {
+  width: 1.28571429em;
+  text-align: center;
+}
+
+.wo {
+  display: flex;
+  flex-direction: column;
+  color: #474141;
+  line-height: 14px;
+  position: relative;
+}
+
+.wo-status {
+  position: absolute;
+  right: 0;
+  background: #004c91;
+  color: white;
+  padding: 1px;
+}
+
